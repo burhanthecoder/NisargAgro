@@ -1,0 +1,237 @@
+{% extends "gstbillingapp/print_base.html" %} {% block content %}
+
+<div class="card">
+    <div id="logo">
+        {% load static %} <img src="{% static 'gstbillingapp/images/invoicelogo1.png' %}" alt="logo image" style="
+		float: left; height: 116px;
+	" />
+        {% load static %} <img src="{% static 'gstbillingapp/images/fssai1.png' %}" alt="logo image" style="
+        float: right; height: 72px;
+    " />
+    
+    </div>
+</div>
+<div class="card-header">
+    <div class="row">
+        <div class="col-sm-6 col-6"><strong style="font-style: italic;">Date of Invoice: {{invoice.invoice_date}}</strong></div>
+        <div class="col-sm-6 text-right col-6"><strong style="font-style: italic;">Invoice No:{{invoice.invoice_number}}</strong></div>
+    </div>
+</div>
+
+<div class="card-body">
+    <div class="row">
+
+
+        <div class="col-sm-6 col-md-6 col-lg-6 col-6"style="
+    font-family: Cinzel, serif;
+    font-size: 14px;
+    font-weight: 900;">
+            <div>
+                <strong style="
+					font-size: 25px;color: #3fb618; letter-spacing: 1px;
+				">{{user_profile.business_title}}</strong>
+            </div>
+            <div id="invoice_profile_data"style="
+    color: var(--gray);
+">{{user_profile.business_address}}</div>
+            {% if user_profile.business_email %}
+            <div style="
+    color: var(--gray);
+">EMAIL: {{user_profile.business_email}}</div>
+            {% endif %} {% if user_profile.business_phone %}
+            <div style="
+    color: var(--gray);
+">Phone: {{user_profile.business_phone}}</div>
+            {% endif %} {% if user_profile.business_gst %}
+            <div style="
+    color: var(--gray);
+">GST No: {{user_profile.business_gst}}</div>
+            {% endif %}
+			
+        </div>
+
+
+
+        <div class="col-sm-6 col-md-6 col-lg-6 col-6">
+            <h6 class="mb-3"style="
+   font-family: "Trirong", serif;
+    font-size: 14px;
+    font-weight: 900;
+	color: #f86537
+">INVOICE TO :</h6>
+            <div>
+                <strong>{{ invoice_data.customer_name }}</strong>
+            </div>
+            <div>{{ invoice_data.customer_address }}</div>
+            <div>Phone: {{ invoice_data.customer_phone }}</div>
+            <div>GST No: {{ invoice_data.customer_gst }}</div>
+            {% if invoice_data.vehicle_number %}
+            <div><strong>Vehicle No:</strong> {{ invoice_data.vehicle_number }}</div>
+            {% endif %}
+        </div>
+
+
+
+    </div>
+
+    <div class="table-responsive-sm" style="
+    PADDING-TOP: inherit;
+" >
+        <table class="table table-striped table-invoice" style="background: #9fff7f;
+      font-family: Rubik, sans-serif;
+  font-size: 15px;
+"">
+            <thead>
+                <tr>
+                    <th class="text-center">#</th>
+                    <th class="text-left">Item</th>
+                    <th class="text-center">Litre</th>
+                    
+                    <th class="text-right">Qty</th>
+                    <th class="text-right">Rate ({{ currency }})</th>
+                    <th class="text-right">Taxable Amount ({{ currency }})</th>
+                    <th class="text-right">GST (%)</th>
+                    {% if invoice_data.igstcheck %}
+                    <th class="text-right">IGST ({{ currency }})</th>
+                    {% else %}
+                    <th class="text-right">CGST ({{ currency }})</th>
+                    <th class="text-right">SGST ({{ currency }})</th>
+                    {% endif %}
+                    <th class="text-right">Total Amount ({{ currency }})</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in invoice_data.items %}
+                <tr>
+                    <td class="text-center">{{ forloop.counter }}</td>
+                    <td class="text-left strong">{{ item.invoice_product }}</td>
+                    <td class="text-center">{{ item.invoice_hsn }}</td>
+                    
+                    <td class="text-right">{{ item.invoice_qty }}</td>
+                    <td class="text-right">{{ item.invoice_rate_without_gst|floatformat:2 }}</td>
+                    <td class="text-right">{{ item.invoice_amt_without_gst|floatformat:2 }}</td>
+                    <td class="text-right">{{ item.invoice_gst_percentage }}</td>
+                    {% if invoice_data.igstcheck %}
+                    <td class="text-right">{{ item.invoice_amt_igst|floatformat:2 }}</td>
+                    {% else %}
+                    <td class="text-right">{{ item.invoice_amt_cgst|floatformat:2 }}</td>
+                    <td class="text-right">{{ item.invoice_amt_sgst|floatformat:2 }}</td>
+                    {% endif %}
+                    <td class="text-right">{{ item.invoice_amt_with_gst|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+
+                <tr id="table-invoice-total-row" style="
+    background: moccasin;
+">
+                    {% if invoice_data.igstcheck %}
+                    <td class="text-right" colspan="5">Total: </td>
+                    <td class="text-right">{{ currency }} {{ invoice_data.invoice_total_amt_without_gst|floatformat:2 }}</td>
+                    <td class="text-right"></td>
+                    <td class="text-right">{{ currency }} {{invoice_data.invoice_total_amt_igst|floatformat:2 }}</td>
+                    {% else %}
+                    <td class="text-right" colspan="5">Total: </td>
+                    <td class="text-right">{{ currency }} {{ invoice_data.invoice_total_amt_without_gst|floatformat:2 }}</td>
+                    <td class="text-right"></td>
+                    <td class="text-right">{{ currency }} {{invoice_data.invoice_total_amt_cgst|floatformat:2 }}</td>
+                    <td class="text-right">{{ currency }} {{invoice_data.invoice_total_amt_sgst|floatformat:2 }}</td>
+                    {% endif %}
+                    <td class="text-right"><strong>{{ currency }} {{ invoice_data.invoice_total_amt_with_gst|floatformat:2 }}</strong></td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="row">
+
+
+        <div class="col-sm-6 col-lg-6 col-md-6">
+
+        </div>
+
+        <div class="col-sm-6 col-lg-6 col-md-6">
+            <table class="table text-right" id="invoice-grand-total-table">
+                <tr>
+                    <td>Total Taxable Amount: </td>
+                    <td>{{ currency }} {{ invoice_data.invoice_total_amt_without_gst|floatformat:2 }}</td>
+                </tr>
+                {% if invoice_data.igstcheck %}
+                <tr>
+                    <td>IGST: </td>
+                    <td>{{ currency }} {{ invoice_data.invoice_total_amt_igst|floatformat:2 }}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td>CGST: </td>
+                    <td>{{ currency }} {{ invoice_data.invoice_total_amt_cgst|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td>SGST: </td>
+                    <td>{{ currency }} {{ invoice_data.invoice_total_amt_sgst|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td>Total amount paid: </td>
+                    <td>{{ currency }} {{ invoice_data.total_amt_paid|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td>Balance: </td>
+                    <td>{{ currency }} {{ invoice_data.balance|floatformat:2 }}</td>
+                </tr>
+                {% endif %}
+                <tr style="
+    color: chartreuse;
+">
+                    <td>Invoice Total: </td>
+                    <td>{{ currency }} {{invoice_data.invoice_total_amt_with_gst|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="text-middle">
+                        Invoice Total In Words: {{ total_in_words }} only.
+                    </td>
+                </tr>
+                
+            </table>
+
+
+        </div>
+
+
+
+    </div>
+	
+	<div class="col-sm-6 col-lg-6 col-md-6">
+<br><br>
+<strong style="
+    color: #df5229;
+">Terms & Instructions :<br> </strong>
+<strong>Payment on Delivery<br> </strong>
+<strong>Sale Status :Self<br> </strong>
+<hr> <hr>
+<strong>Payment Option : Cash/Gpay/ Net Banking</strong><br>
+<strong>Banker : State Bank Of India</strong><br>
+<strong>A/C No. : 00000040371517766</strong><br>
+<strong>IFSC Code : SBIN0061708</strong>
+        </div>
+		
+		<div class="text-right">
+		<strong>Authorized Signature</strong> <br>
+		<strong>Partner<strong>
+		 </div>
+         <hr style="height:2px;border-width:0;color:gray;background-color:gray; display: block; border: none;
+         border-top: solid 1px #aaa;">
+         <br>
+<br>
+<strong style="
+    color: chartreuse;
+">Thank you for your business! <br><br> </strong>
+		 
+		 
+
+
+</div>
+</div>
+<div class="text-center">
+	<button onclick="window.print();" class="btn btn-primary d-print-none mb-4">Print Invoice</button> {% endblock %}
+</div>

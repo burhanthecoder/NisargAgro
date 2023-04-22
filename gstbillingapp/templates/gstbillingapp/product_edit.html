@@ -1,0 +1,43 @@
+{% extends "gstbillingapp/base.html" %} {% load static %} {% block content %}
+
+<h2
+  style="
+    text-align: center;
+    color: #ef582a;
+    background-color: palegreen;
+    font-size: 50px;
+  "
+>
+  <strong>Edit/Add Product</strong>
+</h2>
+<form method="POST">
+  {% csrf_token %}
+  <table class="table">
+    <tbody class="two-col-form">
+      <tr>
+        <th scope="row" class="text-right">Product Name:</th>
+        <td class="form-input-td">{{product_form.product_name}}</td>
+      </tr>
+      <tr>
+        <th scope="row" class="text-right">Litre(ml):</th>
+        <td class="form-input-td">{{product_form.product_hsn}}</td>
+      </tr>
+      <tr>
+        <th scope="row" class="text-right">Product Unit:</th>
+        <td class="form-input-td">{{product_form.product_unit}}</td>
+      </tr>
+      <tr>
+        <th scope="row" class="text-right">GST %:</th>
+        <td class="form-input-td">{{product_form.product_gst_percentage}}</td>
+      </tr>
+      <tr>
+        <th scope="row" class="text-right">Rate with GST:</th>
+        <td class="form-input-td">{{product_form.product_rate_with_gst}}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="text-center">
+    <input type="submit" class="btn btn-primary" value="Submit" />
+  </div>
+</form>
+{% endblock %}

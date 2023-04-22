@@ -1,0 +1,54 @@
+{% extends "gstbillingapp/base.html" %}
+
+
+{% load static %}
+<!doctype html>
+
+{% block title %}
+Nisarg-Agro - GST invoicing | Inventory Management | Book keeping
+{% endblock %}
+
+{% block metatags %}
+<meta name="description" content="Create GST invoice/bills for free. Automatic inventory Management and Books management.">
+<meta name="google-site-verification" content="MJbX1a9Fs1MIE1tnpRnp4At9OzVMxoumTAvOWUlG8-w" />
+<link rel="canonical" href="https://billgst.in/" />
+
+<meta property="og:title" content="BillGST - Simplest GST invoicing | Inventory Management | Book keeping" />
+<meta property="og:url" content="https://billgst.in" />
+<meta property="og:image" content="https://billgst.in{% static "gstbillingapp/images/screenshot_interface.png" %}" />
+{% endblock %}
+
+{% block content %}
+<div class="jumbotron">
+	<div id="health">{% load static %} <img src="{% static 'gstbillingapp/images/cover.png' %}" alt="logo image" style="
+		float: right; height: 350px; width: 500px;"  />
+	 </div>
+	<div class="col-sm-6 col-md-6 col-lg-6 col-6"style="
+		font-family: Cinzel, serif;
+		font-size: 14px;
+		font-weight: 900;">
+		<h1 class="display-3"><strong style="
+			font-size: 50px;color: #3fb618; letter-spacing: 1px;"><b>Nisarg Agro Product Industry</b></strong></h1>
+		<h2 class="display-6" ><b>GST invoicing</b></h2>
+	</div>
+	
+	<hr width="50%" class="my-4">
+	
+	<h4>
+	<ul>
+		 <li>Easily create invoices</li>
+		 <li>Manage inventory</li>
+		 <li>Keep books and track balances</li>
+	</ul>
+	</h4>
+	<p class="lead">
+		<a class="btn btn-primary btn-lg" href="{% url 'invoice_create' %}" role="button">Create Invoice</a>
+	</p>
+</div>
+
+
+
+
+</div>
+
+{% endblock %}
